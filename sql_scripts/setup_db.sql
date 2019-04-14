@@ -32,6 +32,7 @@ into jefferson_park;
 select name, geom, st_astext(geom) as word from jefferson_park;
 
 -- Version #2 (This is from looking at a map online. Includes more area)
+-- http://geojson.io
 -- drop table jefferson_park;
 
 select 'Jefferson Park' as name,
