@@ -1,6 +1,10 @@
 create extension postgis;
 
 --------------------------------------------------------------------------------
+-- These are built at geojson.io...
+--------------------------------------------------------------------------------
+
+-- Version #1
 -- drop table jefferson_park;
 
 select 'Jefferson Park' as name,
@@ -26,6 +30,50 @@ select 'Jefferson Park' as name,
 into jefferson_park;
 
 select name, geom, st_astext(geom) as word from jefferson_park;
+
+-- Version #2 (This is from looking at a map online. Includes more area)
+-- drop table jefferson_park;
+
+select 'Jefferson Park' as name,
+	st_geomfromgeojson(
+	'{
+    "type": "Polygon",
+    "coordinates": [[
+			[-84.41697120666504,33.68135395671176],
+			[-84.41688537597656,33.69220952001667],
+			[-84.41551208496094,33.692173813174435],
+			[-84.41546916961669,33.69720833149389],
+			[-84.42315101623535,33.69745826443413],
+			[-84.42551136016846,33.69720833149389],
+			[-84.42885875701904,33.69774390118986],
+			[-84.4295883178711,33.695208841799214],
+			[-84.4310474395752,33.693566369028304],
+			[-84.43310737609863,33.69228093365666],
+			[-84.4350814819336,33.6914596732139],
+			[-84.43649768829346,33.689710005230346],
+			[-84.43830013275146,33.68749608856894],
+			[-84.43997383117676,33.68521069542541],
+			[-84.44031715393066,33.684032265842674],
+			[-84.4401454925537,33.68206818063879],
+			[-84.4389009475708,33.676211369282264],
+			[-84.4377851486206,33.67674706982397],
+			[-84.43705558776855,33.6774970449755],
+			[-84.4368839263916,33.67867556414017],
+			[-84.43628311157227,33.67921124932958],
+			[-84.43512439727783,33.679425522470844],
+			[-84.43418025970459,33.679461234609136],
+			[-84.43160533905028,33.67949694673259],
+			[-84.42739963531494,33.68135395671176],
+			[-84.42654132843018,33.68149680197185],
+			[-84.42482471466064,33.68149680197185],
+			[-84.41697120666504,33.68135395671176]
+		]]
+	}') as geom
+into jefferson_park;
+
+select name, geom, st_astext(geom) as word from jefferson_park;
+
+
 --------------------------------------------------------------------------------
 create schema raw;
 alter schema raw owner to osaevtapyrcflq;
@@ -98,6 +146,29 @@ alter table public.east_point_incidents owner to osaevtapyrcflq;
 
 select *
 from public.east_point_incidents;
+--------------------------------------------------------------------------------
+/*
+drop table public.tweets_sent;
+truncate table public.tweets_sent;
+*/
+
+create table if not exists public.tweets_sent
+(
+	incident_id integer primary key,
+	case_number text,
+	incident_datetime timestamp,
+	incident_description text,
+	address_1 text,
+	latitude numeric,
+	longitude numeric,
+	length_tweet integer,
+	sent_at timestamp default now()
+);
+
+alter table public.tweets_sent owner to osaevtapyrcflq;
+
+select *
+from public.tweets_sent;
 --------------------------------------------------------------------------------
 -- This is the merge statement from raw into public...
 insert into public.east_point_incidents
