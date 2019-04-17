@@ -27,7 +27,7 @@ def process_incidents(logger):
         if number_results > 0:
             api = utils.get_twitter_auth()
             for incident in incidents:
-                tweet_success = utils.update_status(api, results, conn, cur)
+                tweet_success = utils.update_status(api, incident, conn, cur)
                 if tweet_success:
                     logger.info("Tweet status posted successfully")
                 else:
